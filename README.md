@@ -36,7 +36,3 @@ Consultez la documentation de chaque package dans le dossier `src/`.
 ## Contribuer
 
 Les contributions sont les bienvenues ! Veuillez ouvrir une issue ou une pull request.
-
-## Licence
-
-Ce projet est sous licence MIT.
