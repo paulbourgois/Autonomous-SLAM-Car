@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(control_pkg)
+project(sensors_pkg)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -11,12 +11,14 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system)
 
-add_executable(arduino_interface_node src/arduino_interface_node.cpp)
-ament_target_dependencies(arduino_interface_node rclcpp std_msgs Boost) 
-install(TARGETS arduino_interface_node
+# include headers files
+include_directories(include)
+
+add_executable(lidar_sheer_data src/sheer_data_node.cpp)
+ament_target_dependencies(lidar_sheer_data rclcpp std_msgs Boost) 
+install(TARGETS lidar_sheer_data
   DESTINATION lib/${PROJECT_NAME}
 )
-
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
