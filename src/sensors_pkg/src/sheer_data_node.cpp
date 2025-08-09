@@ -1,13 +1,22 @@
 #include "sensors_pkg/sheer_data_node.hpp"
 
 SheerDataNode::SheerDataNode() 
-    : Node("lidar_sheer_data_node"), 
+    : Node("lidar_data_publisher"), 
       serial_(io_), 
       baud_rate_(230400),
       port_("/dev/ttyUSB0")
 {
+    // Déclaration des paramètres ros2 pour les utiliser avec un fichier de configuration YAML pour launch
+    this->declare_parameter<std::string>("serial_port", "/dev/ttyUSB0");
+    this->declare_parameter<int>("baudrate", 230400);
+    this->declare_parameter<std::string>("frame_id", "laser_frame");
+    // Donc on récupère les paramètres choisis
+    this->get_parameter("serial_port", port_);
+    this->get_parameter("baudrate", baud_rate_);
+    this->get_parameter("frame_id", frame_id);
+
     // Création du publisher
-    publisher_ = this->create_publisher<sensor_msgs::msg::LaserScan>("lidar_sheer_data_topic", 10);
+    publisher_ = this->create_publisher<sensor_msgs::msg::LaserScan>("scan", 10);
 
     // Ouvre le port série
     try {
@@ -95,7 +104,7 @@ SheerDataNode::DecodedData SheerDataNode::DecodeData(const std::string& trame){
 
 sensor_msgs::msg::LaserScan SheerDataNode::FromRawToLaserScan(const SheerDataNode::DecodedData& data) {
     sensor_msgs::msg::LaserScan scan_msg;
-    scan_msg.header.frame_id = "laser_frame"; // Assurez-vous de définir le frame_id approprié
+    scan_msg.header.frame_id = frame_id; // Assurez-vous de définir le frame_id approprié
     scan_msg.angle_min = static_cast<float>(data.startAngle*M_PI/(100.0*180.0)); // Convertir en angle depuis des 0.01 angle puis radians
     scan_msg.angle_max = static_cast<float>(data.endAngle*M_PI/(100.0*180.0)); // Convertir en angle depuis des 0.01 angle puis radians
     scan_msg.range_min = 0.0; // Définir la distance minimale
@@ -169,7 +178,7 @@ void SheerDataNode::process_buffer(const std::vector<char>& buf, size_t len) {
                 publisher_->publish(msg);
 
             } else {
-                RCLCPP_WARN(this->get_logger(), "Trame trop courte pour extraire le timestamp");
+                // RCLCPP_WARN(this->get_logger(), "Trame trop courte pour extraire le timestamp");
             }
             
 

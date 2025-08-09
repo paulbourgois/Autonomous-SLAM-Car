@@ -33,6 +33,8 @@ static const uint8_t CrcTable[256] = {
 class SheerDataNode : public rclcpp::Node {
 public:
     SheerDataNode();
+    std::string frame_id;
+
 private:
     long int* total_data_received_ = new long int(0);
     long int* total_data_not_ok_ = new long int(0);

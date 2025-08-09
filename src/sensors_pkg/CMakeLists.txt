@@ -14,9 +14,9 @@ find_package(Boost REQUIRED COMPONENTS system)
 # include headers files
 include_directories(include)
 
-add_executable(lidar_sheer_data src/sheer_data_node.cpp)
-ament_target_dependencies(lidar_sheer_data rclcpp sensor_msgs Boost) 
-install(TARGETS lidar_sheer_data
+add_executable(lidar_data_publisher src/sheer_data_node.cpp)
+ament_target_dependencies(lidar_data_publisher rclcpp sensor_msgs Boost) 
+install(TARGETS lidar_data_publisher
   DESTINATION lib/${PROJECT_NAME}
 )
 
