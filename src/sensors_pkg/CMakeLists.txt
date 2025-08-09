@@ -8,14 +8,14 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system)
 
 # include headers files
 include_directories(include)
 
 add_executable(lidar_sheer_data src/sheer_data_node.cpp)
-ament_target_dependencies(lidar_sheer_data rclcpp std_msgs Boost) 
+ament_target_dependencies(lidar_sheer_data rclcpp sensor_msgs Boost) 
 install(TARGETS lidar_sheer_data
   DESTINATION lib/${PROJECT_NAME}
 )

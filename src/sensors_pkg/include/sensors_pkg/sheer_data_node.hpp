@@ -1,5 +1,5 @@
 #include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/string.hpp>
+#include <sensor_msgs/msg/laser_scan.hpp>
 #include <boost/asio.hpp>
 
 
@@ -41,9 +41,20 @@ private:
     boost::asio::serial_port serial_;
     unsigned int baud_rate_;
     std::string port_;
+    uint16_t last_timestamp_=0; // Initialiser à 0 pour éviter les erreurs de comparaison en ms
 
 
-    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
+    struct DecodedData {
+        uint16_t timestamp;
+        uint16_t endAngle;
+        uint16_t radarSpeed;
+        uint16_t startAngle;
+        std::vector<std::pair<uint16_t, uint8_t>> points; // Paires de distance et force du signal
+    };
+    DecodedData DecodeData(const std::string& trame);
+    sensor_msgs::msg::LaserScan FromRawToLaserScan(const DecodedData& data);
+
+    rclcpp::Publisher<sensor_msgs::msg::LaserScan>::SharedPtr publisher_;
 
     void read_serial();
     uint8_t CalCRC8(uint8_t *p, uint8_t len);
